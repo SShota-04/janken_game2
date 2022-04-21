@@ -63,7 +63,7 @@ window.onload = function () {
 		const sakanaImg = new Sprite(180, 120);				//画像サイズをここに書く。使う予定の画像サイズはプロパティで見ておくこと
 		sakanaImg.moveTo(118, 100);						//sakanaボタンの位置
 		sakanaImg.image = game.assets[sakanaImgUrl];			//読み込む画像の相対パスを指定。　事前にgame.preloadしてないと呼び出せない
-		mainScene.addChild(sakanaImg);					//mainSceneにこのぞう山画像を貼り付ける  
+		mainScene.addChild(sakanaImg);					//mainSceneにこのsakana画像を貼り付ける  
 
 		//背景画像
 		let bg = new Sprite(400, 500);
@@ -75,7 +75,7 @@ window.onload = function () {
 		Peng.image = game.assets["img/penguin2.png"];
 		Peng.x = 200;
 		Peng.y = game.height / 2;
-		game.rootScene.addChild(Peng);
+		mainScene.addChild(Peng);
 		
 		sakanaImg.ontouchend = function () {				//sakanaボタンをタッチした（タッチして離した）時にこの中の内容を実行する
 			point++;									//Pointを1増やす
@@ -143,6 +143,7 @@ window.onload = function () {
 				//ゲームオーバー後のテキスト表示
 				gameOverText.text = "GAMEOVER 記録：" + point + "枚";				//テキストに文字表示 
 
+				
 				//ゲームオーバー画面
 				let bg2 = new Sprite(400, 500);
 				bg2.image = game.assets["img/penguin3.jpg"];
@@ -163,7 +164,7 @@ window.onload = function () {
 		//GAMEOVER
 		const gameOverText = new Label(); 					//テキストはLabelクラス
 		gameOverText.font = "20px Meiryo";				//フォントはメイリオ 20px 変えたかったらググってくれ
-		gameOverText.color = 'rgba(255,255,255,1)';		//色　RGB+透明度　今回は白
+		gameOverText.color = 'rgba(0,0,0,1)';		//色　RGB+透明度　今回は白
 		gameOverText.width = 400;							//横幅指定　今回画面サイズ400pxなので、width:400pxだと折り返して二行目表示してくれる
 		gameOverText.moveTo(0, 30);						//移動位置指定
 		endScene.addChild(gameOverText);						//endSceneシーンにこの画像を埋め込む
@@ -194,8 +195,8 @@ window.onload = function () {
 		tweetBtn.ontouchend = function () {				//S_Tweetボタンをタッチした（タッチして離した）時にこの中の内容を実行する
 			//ツイートＡＰＩに送信
 			//結果ツイート時にURLを貼るため、このゲームのURLをここに記入してURLがツイート画面に反映されるようにエンコードする
-			const url = encodeURI("https://hothukurou.com");
-			window.open("http://twitter.com/intent/tweet?text=頑張って" + point + "枚入手した&hashtags=ahoge&url=" + url); //ハッシュタグにahogeタグ付くようにした。
+			const url = encodeURI("https://sshota-04.github.io/janken_game2/");
+			window.open("http://twitter.com/intent/tweet?text=魚を" + point + "匹食べた&hashtags=ジーズ&url=" + url); //ハッシュタグにジーズタグが付く
 		};
 
 	};
