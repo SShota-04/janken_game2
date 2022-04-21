@@ -3,6 +3,7 @@ enchant();
 window.onload = function () {
 	const game = new Game(400, 500);  				//画面サイズを400*500にする。（このサイズだとスマホでも快適なのでおススメ）
 
+	game.fps = 30;
 	/////////////////////////////////////////////////
 	//ゲーム開始前に必要な画像・音を読み込む部分
 
@@ -23,6 +24,10 @@ window.onload = function () {
 	const tweetImgUrl = "img/tweet.png";						//game.htmlからの相対パス
 	game.preload([tweetImgUrl]);					//データを読み込んでおく		
 
+	game.preload("img/water1.png");
+	game.preload("img/penguin3.jpg");
+	game.preload("img/penguin2.png");
+
 	//読み込み終わり
 	/////////////////////////////////////////////////
 
@@ -42,7 +47,7 @@ window.onload = function () {
 
 		const mainScene = new Scene();					//シーン作成
 		game.pushScene(mainScene);  					//mainSceneシーンオブジェクトを画面に設置
-		mainScene.backgroundColor = "black"; 			//mainSceneシーンの背景は黒くした
+		//mainScene.backgroundColor = "black"; 			//mainSceneシーンの背景は黒くした
 
 		//ポイント表示テキスト
 		const scoreText = new Label(); 					//テキストはLabelクラス
@@ -60,12 +65,24 @@ window.onload = function () {
 		sakanaImg.image = game.assets[sakanaImgUrl];			//読み込む画像の相対パスを指定。　事前にgame.preloadしてないと呼び出せない
 		mainScene.addChild(sakanaImg);					//mainSceneにこのぞう山画像を貼り付ける  
 
-		sakanaImg.ontouchend = function () {				//ぞう山ボタンをタッチした（タッチして離した）時にこの中の内容を実行する
+		//背景画像
+		let bg = new Sprite(400, 500);
+		bg.image = game.assets["img/water1.png"];
+		game.rootScene.addChild(bg); 
+
+		//アイコン画像
+		let Peng = new Sprite(32, 24);
+		Peng.image = game.assets["img/penguin2.png"];
+		Peng.x = 200;
+		Peng.y = game.height / 2;
+		game.rootScene.addChild(Peng);
+		
+		sakanaImg.ontouchend = function () {				//sakanaボタンをタッチした（タッチして離した）時にこの中の内容を実行する
 			point++;									//Pointを1増やす
 			game.assets[clickSndUrl].clone().play();		//クリックの音を鳴らす。
 
-			//クリックしたのでぞう山画像のｘ位置を戻す
-			this.x = -200;							//this.xって何？と思った方、Zoyamaの関数内でぞう山の座標を動かすときにはthisを使います。
+			//クリックしたのでsakana画像のｘ位置を戻す
+			this.x = -200;							//this.xって何？と思った方、Zoyamaの関数内でsakanaの座標を動かすときにはthisを使います。
 
 			//ポイントによって状態Stateを変更する
 			if (point < 3) {
@@ -101,7 +118,7 @@ window.onload = function () {
 			}
 			if (state == 3) {							//状態３（point６以上から）
 				sakanaImg.x += 10;
-				sakanaImg.y = 200 + Math.sin(zoyamaImg.x / 70) * 100; // ｙ座標を振幅100pxのサイン波で移動(Sinは便利なので慣れとくといいよ！)
+				sakanaImg.y = 200 + Math.sin(sakanaImg.x / 70) * 100; // ｙ座標を振幅100pxのサイン波で移動(Sinは便利なので慣れとくといいよ！)
 			}
 			if (state == 4) {							//状態４（point９以上から）　4は初期セット状態（state=4）と移動状態（state=4.1)の2つに状態をわける		
 				sakanaImg.y = Math.random() * 400;			//ｙ座標の位置をランダムに決定
@@ -119,13 +136,20 @@ window.onload = function () {
 			scoreText.text = "現在：" + point; 				//point変数が変化するので、毎フレームごとにpointの値を読み込んだ文章を表示する
 
 			//ゲームオーバー判定
-			if (sakanaImg.x >= 400) {						//画面端にぞう山画像が行ってしまったら
+			if (sakanaImg.x >= 400) {						//画面端にsakana画像が行ってしまったら
 				game.popScene();					//mainSceneシーンを外す
 				game.pushScene(endScene);				//endSceneシーンを読み込ませる
 
 				//ゲームオーバー後のテキスト表示
 				gameOverText.text = "GAMEOVER 記録：" + point + "枚";				//テキストに文字表示 
+
+				//ゲームオーバー画面
+				let bg2 = new Sprite(400, 500);
+				bg2.image = game.assets["img/penguin3.jpg"];
+				game.rootScene.addChild(bg2);
 			}
+
+			
 
 		};
 
@@ -134,7 +158,7 @@ window.onload = function () {
 		////////////////////////////////////////////////////////////////
 		//結果画面
 		const endScene = new Scene();
-		endScene.backgroundColor = "blue";
+		
 
 		//GAMEOVER
 		const gameOverText = new Label(); 					//テキストはLabelクラス
@@ -156,6 +180,9 @@ window.onload = function () {
 			state = 0;
 			game.popScene();						//endSceneシーンを外す
 			game.pushScene(mainScene);					//mainSceneシーンを入れる
+			let bg = new Sprite(400, 500);
+			bg.image = game.assets["img/water1.png"];
+			game.rootScene.addChild(bg); 
 		};
 
 		//ツイートボタン
@@ -174,3 +201,4 @@ window.onload = function () {
 	};
 	game.start();
 };
+	
